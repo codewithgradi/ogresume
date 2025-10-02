@@ -3,8 +3,8 @@ import ListComponent from "./ListComponent"
 type BlockBuilderProps = {
     title?: string,
     businessName: string,
-    city: String,
-    country: String,
+    city: string,
+    country: string,
     start: string,
     end:string,
     items : string[]

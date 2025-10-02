@@ -42,48 +42,52 @@ type BuilderProps = {
 };
 
 export default function Builder({ type, index, data, onChange, onRemove }: BuilderProps) {
+  // Type guard for description array
+  const descriptions: string[] = "description" in data ? data.description : [];
+
   // Helper to trigger synthetic events for description and current checkbox
-  const triggerChange = (name: string, value: any) => {
+  const triggerChange = (name: string, value: string | boolean | string[]) => {
     const synthetic = {
       target: { name, value },
     } as unknown as React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>;
     onChange(synthetic, type, index);
   };
 
-  const descriptions = (data as any).description || [];
+  const isEducation = type === "education";
+  const current = "current" in data ? data.current : false;
 
   return (
     <div className="border border-gray-200 rounded-xl p-6 shadow-sm bg-gray-50 space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Input
-          name={type === "education" ? "award" : "role"}
-          placeholder={type === "education" ? "Qualification / Award" : "Role / Position"}
-          value={type === "education" ? (data as EducationProps).award : (data as ExperienceProps).role}
-          onChange={(e) => onChange(e as React.ChangeEvent<HTMLInputElement>, type, index)}
+          name={isEducation ? "award" : "role"}
+          placeholder={isEducation ? "Qualification / Award" : "Role / Position"}
+          value={isEducation ? (data as EducationProps).award : (data as ExperienceProps).role}
+          onChange={(e) => onChange(e, type, index)}
           required
         />
 
         <Input
-          name={type === "education" ? "institution" : "company"}
-          placeholder={type === "education" ? "Institution" : "Company"}
-          value={type === "education" ? (data as EducationProps).institution : (data as ExperienceProps).company}
-          onChange={(e) => onChange(e as React.ChangeEvent<HTMLInputElement>, type, index)}
+          name={isEducation ? "institution" : "company"}
+          placeholder={isEducation ? "Institution" : "Company"}
+          value={isEducation ? (data as EducationProps).institution : (data as ExperienceProps).company}
+          onChange={(e) => onChange(e, type, index)}
           required
         />
 
         <Input
           name="city"
           placeholder="City"
-          value={(data as any).city || ""}
-          onChange={(e) => onChange(e as React.ChangeEvent<HTMLInputElement>, type, index)}
+          value={"city" in data ? data.city : ""}
+          onChange={(e) => onChange(e, type, index)}
           required
         />
 
         <Input
           name="country"
           placeholder="Country"
-          value={(data as any).country || ""}
-          onChange={(e) => onChange(e as React.ChangeEvent<HTMLInputElement>, type, index)}
+          value={"country" in data ? data.country : ""}
+          onChange={(e) => onChange(e, type, index)}
           required
         />
       </div>
@@ -95,20 +99,20 @@ export default function Builder({ type, index, data, onChange, onRemove }: Build
           <Input
             type="month"
             name="start"
-            value={(data as any).start || ""}
-            onChange={(e) => onChange(e as React.ChangeEvent<HTMLInputElement>, type, index)}
+            value={"start" in data ? data.start : ""}
+            onChange={(e) => onChange(e, type, index)}
             min="1900-01"
           />
         </div>
 
         <div>
           <Label className="block mb-1">To</Label>
-          {!(data as any).current ? (
+          {!current ? (
             <Input
               type="month"
               name="end"
-              value={(data as any).end || ""}
-              onChange={(e) => onChange(e as React.ChangeEvent<HTMLInputElement>, type, index)}
+              value={"end" in data ? data.end : ""}
+              onChange={(e) => onChange(e, type, index)}
               min="1900-01"
             />
           ) : (
@@ -119,7 +123,7 @@ export default function Builder({ type, index, data, onChange, onRemove }: Build
             <input
               type="checkbox"
               id={`current-${type}-${index}`}
-              checked={(data as any).current || false}
+              checked={current || false}
               onChange={(e) => {
                 const checked = e.target.checked;
                 const updated = { ...(data as any), current: checked };
@@ -144,7 +148,7 @@ export default function Builder({ type, index, data, onChange, onRemove }: Build
 
       {/* Descriptions */}
       <div className="space-y-2">
-        {descriptions.map((desc: string, descIndex: number) => (
+        {descriptions.map((desc, descIndex) => (
           <div key={descIndex} className="relative">
             <Textarea
               name="description"
@@ -152,7 +156,7 @@ export default function Builder({ type, index, data, onChange, onRemove }: Build
               value={desc}
               onChange={(e) => {
                 const updated = [...descriptions];
-                updated[descIndex] = (e.target as HTMLTextAreaElement).value;
+                updated[descIndex] = e.target.value;
                 triggerChange("description", updated);
               }}
             />
@@ -160,7 +164,7 @@ export default function Builder({ type, index, data, onChange, onRemove }: Build
               type="button"
               className="absolute top-1 right-1 text-sm text-red-500"
               onClick={() => {
-                const updated = descriptions.filter((_:string, i:number) => i !== descIndex);
+                const updated = descriptions.filter((_, i) => i !== descIndex);
                 triggerChange("description", updated);
               }}
               aria-label="remove description"

@@ -94,13 +94,13 @@ export default function FormWithPreview() {
     return { ...prev, [section]: updated };
   });
 };
-const handleRemoveSmallSection = (section: "skills" | "certs", index: number) => {
-  setFormData((prev) => {
-    const updated = [...prev[section]];
-    updated.splice(index, 1); 
-    return { ...prev, [section]: updated };
-  });
-};
+// const handleRemoveSmallSection = (section: "skills" | "certs", index: number) => {
+//   setFormData((prev) => {
+//     const updated = [...prev[section]];
+//     updated.splice(index, 1); 
+//     return { ...prev, [section]: updated };
+//   });
+// };
 
 
   const addNewExperience = () => {
