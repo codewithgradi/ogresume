@@ -148,7 +148,7 @@ export default function Preview({
       {/* Buttons */}
       <div className="flex justify-around items-center my-3">
         <Button onClick={handlePrint}>Download / Print CV</Button>
-        <Button variant="outline" className="from-primary-foreground">
+        <Button onClick={()=>{window.location.reload()}} variant="outline" className="from-primary-foreground">
           <FaPlus /> Create a new CV
         </Button>
       </div>
