@@ -126,7 +126,7 @@ export default function Builder({ type, index, data, onChange, onRemove }: Build
               checked={current || false}
               onChange={(e) => {
                 const checked = e.target.checked;
-                const updated = { ...(data as any), current: checked };
+const updated: ExperienceProps | EducationProps = { ...(data as ExperienceProps | EducationProps), current: checked };
                 if (checked) updated.end = ""; // clear end date if "current" checked
                 triggerChange("current", checked);
                 triggerChange("end", updated.end);
