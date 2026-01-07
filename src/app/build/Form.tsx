@@ -49,11 +49,7 @@ type FormData = {
 };
 
 export default function FormWithPreview() {
-  const context = useFormContext();
-  if (!context) return null;
-  const { updateFormData } = context
-  
-  const [formData, setFormData] = useState<FormData>({
+   const [formData, setFormData] = useState<FormData>({
     fullName: "",
     city: "",
     country: "",
@@ -70,6 +66,11 @@ export default function FormWithPreview() {
 
   const [showPreview, setShowPreview] = useState(false);
   const [loading, setLoading] = useState(false);
+  const context = useFormContext();
+  if (!context) return null;
+  const { updateFormData } = context
+  
+ 
 
   const handleTopLevelChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
