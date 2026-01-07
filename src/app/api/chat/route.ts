@@ -55,10 +55,12 @@ export async function POST(req: Request) {
       },
     });
 
-  } catch (error: any) {
-    console.error("Gemini Route Error:", error);
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : "An error occurred";
+
+    console.error("Gemini Route Error:", errorMessage);
     return NextResponse.json(
-      { error: error.message || "Failed to generate feedback" }, 
+      { error: error || "Failed to generate feedback" },
       { status: 500 }
     );
   }
