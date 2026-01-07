@@ -1,10 +1,11 @@
 import React from 'react'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
+import { FormProvider } from '@/components/FormProvider'
 
 const page = () => {
   return (
-<div className="flex items-center justify-center min-h-screen bg-gray-50 p-4">
+    <div className="flex items-center justify-center min-h-screen bg-gray-50 p-4">
   <div className="space-y-6 w-full max-w-md p-6 bg-white rounded-2xl shadow-lg text-center">
     <h1 className="font-bold text-3xl">OG Resume Build</h1>
     <p className="text-sm text-gray-700">
@@ -20,7 +21,7 @@ const page = () => {
           <Link href='/build'>Get Started</Link>
     </Button>
   </div>
-</div>
+    </div>
 
   )
 }

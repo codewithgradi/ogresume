@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useRef } from "react";
+import { useRouter } from "next/navigation";
 import ListComponent from "./ListComponent";
 import { Button } from "./ui/button";
 import { FaPlus } from "react-icons/fa6";
@@ -63,6 +64,7 @@ export default function Preview({
     const d = new Date(Number(year), Number(month) - 1);
     return d.toLocaleString("default", { month: "short", year: "numeric" });
   };
+  const router = useRouter()
 
   const cvRef = useRef<HTMLDivElement>(null);
 
@@ -150,6 +152,9 @@ export default function Preview({
         <Button onClick={handlePrint}>Download / Print CV</Button>
         <Button onClick={()=>{window.location.reload()}} variant="outline" className="from-primary-foreground">
           <FaPlus /> Create a new CV
+        </Button>
+        <Button onClick={()=> router.push('/feedback')}>
+          Get feed back
         </Button>
       </div>
     </div>

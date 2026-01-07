@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Builder from "@/components/Builder";
 import Additional from "@/components/AdditionalInfo";
 import Preview from "@/components/Preview";
@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { FaPlus } from "react-icons/fa";
+import {  useFormContext } from "@/components/FormProvider";
 
 type ExperienceProps = {
   role: string;
@@ -17,8 +18,8 @@ type ExperienceProps = {
   country: string;
   start: string;
   end: string;
-    description: string[];
-    current?: boolean
+  description: string[];
+  current?: boolean
 };
 
 type EducationProps = {
@@ -26,8 +27,8 @@ type EducationProps = {
   institution: string;
   city: string;
   country: string;
-    start: string;
-    current?: boolean
+  start: string;
+  current?: boolean
   end: string;
   description: string[];
 };
@@ -48,6 +49,10 @@ type FormData = {
 };
 
 export default function FormWithPreview() {
+  const context = useFormContext();
+  if (!context) return null;
+  const { updateFormData } = context
+  
   const [formData, setFormData] = useState<FormData>({
     fullName: "",
     city: "",
@@ -66,13 +71,11 @@ export default function FormWithPreview() {
   const [showPreview, setShowPreview] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  // top-level fields
   const handleTopLevelChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // experience / education fields
   const handleSectionChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
     section: "experience" | "education",
@@ -86,7 +89,6 @@ export default function FormWithPreview() {
     });
   };
 
-    // add new or remove section
     const handleRemoveSection = (section: "experience" | "education", index: number) => {
   setFormData((prev) => {
     const updated = [...prev[section]];
@@ -94,13 +96,7 @@ export default function FormWithPreview() {
     return { ...prev, [section]: updated };
   });
 };
-// const handleRemoveSmallSection = (section: "skills" | "certs", index: number) => {
-//   setFormData((prev) => {
-//     const updated = [...prev[section]];
-//     updated.splice(index, 1); 
-//     return { ...prev, [section]: updated };
-//   });
-// };
+
 
 
   const addNewExperience = () => {
@@ -127,18 +123,19 @@ export default function FormWithPreview() {
 const addNewCert = () => {
   setFormData((prev) => ({
     ...prev,
-    certs: [...prev.certs, ""], // push an empty string
+    certs: [...prev.certs, ""], 
   }));
 };
 
-  // submit / show preview
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+
+    updateFormData(formData)
+
     setShowPreview(true);
   };
 
-  // edit from preview
   const handleEdit = () => {
     setShowPreview(false);
   };
@@ -168,6 +165,7 @@ const addNewCert = () => {
       </div>
     );
   }
+  
 
   return (
     <form onSubmit={handleSubmit} className="max-w-4xl mx-auto bg-white shadow-lg rounded-2xl p-8 space-y-2">
